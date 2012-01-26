@@ -77,11 +77,41 @@ function buddystrap_adminbar_random_menu() { ?>
 }
 
 function buddystrap_adminbar_thisblog_menu() {
-		
+	if ( current_user_can( 'edit_posts' ) ) {
+		echo '<li class="dropdown"><a href="' . admin_url() . '" class="dropdown-toggle">';
+		_e( 'Dashboard', 'buddypress' );
+		echo '</a>';
+		echo '<ul class="dropdown-menu">';
+
+		echo '<li><a href="' . admin_url() . 'post-new.php">' . __( 'New Post', 'buddypress' ) . '</a></li>';
+		echo '<li><a href="' . admin_url() . 'edit.php">' . __( 'Manage Posts', 'buddypress' ) . '</a></li>';
+		echo '<li><a href="' . admin_url() . 'edit-comments.php">' . __( 'Manage Comments', 'buddypress' ) . '</a></li>';
+
+		do_action( 'bp_adminbar_thisblog_items' );
+
+		echo '</ul>';
+		echo '</li>';
+	}
 }
 
 function buddystrap_adminbar_account_menu() {
-	
+	global $bp;
+
+	if ( !$bp->bp_nav || !is_user_logged_in() )
+		return false;
+
+	echo '<li class="dropdown"><a href="' . bp_loggedin_user_domain() . '" class="dropdown-toggle">';
+	echo __( 'My Account', 'buddypress' ) . '</a>';
+	echo '<ul class="dropdown-menu">';
+	foreach( (array)$bp->bp_nav as $nav_item ) {
+		if ( -1 == $nav_item['position'] )
+			continue;
+		echo '<li>';
+		echo '<a href="' . $nav_item['link'] . '">' . $nav_item['name'] . '</a>';
+		echo '</li>';
+	}
+	echo '</ul>';
+	echo '</li>';
 }
 
 function buddystrap_adminbar_login_menu() {
@@ -98,4 +128,6 @@ function buddystrap_adminbar_login_menu() {
 add_action('wp_footer', 'buddystrap_adminbar', 8);
 add_action('buddystrap_adminbar_logo', 'buddystrap_adminbar_logo');
 add_action('buddystrap_adminbar_primary_menus', 'buddystrap_adminbar_login_menu');
+add_action('buddystrap_adminbar_primary_menus', 'buddystrap_adminbar_thisblog_menu');
+add_action('buddystrap_adminbar_primary_menus', 'buddystrap_adminbar_account_menu');
 add_action('buddystrap_adminbar_secondary_menus', 'buddystrap_adminbar_random_menu');
