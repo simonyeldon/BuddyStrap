@@ -5,3 +5,10 @@ Description: A theme for BuddyPress that uses the excellent work from twitter th
 Author: Simon Yeldon
 Author URI: http://ghosty.co.uk
 */
+
+/*import bootstrap css file */
+@import url('bootstrap/bootstrap.css');
+
+body{
+	padding-top: 60px;
+}
